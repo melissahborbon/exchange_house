@@ -1,0 +1,390 @@
+import time
+# Sistema para Casa de cambio
+
+# Declaracion de variables_0
+programa = int
+fecha = str
+compra_tdc = 1
+venta_tdc = 0
+dolares_caja = float
+pesos_caja = float
+movimiento = 0
+hora = str
+controlador = 0
+ganancias = 0
+dar = float
+pedir = float
+menu_bit = True
+i = 0
+totales = 0
+compras = 0
+ventas = 0
+promedio = 0
+suma_ventas = 0
+
+# Listas
+v_numero_movimiento = []
+v_numero_empleado = []
+v_fecha = []
+v_hora = []
+v_compra_venta = []
+v_tc_compra = []
+v_tc_venta = []
+v_cantidad = []
+v_efectivo_dolares = []
+v_efectivo_pesos = []
+
+# Start
+bandera = True
+while bandera:
+    try:
+        programa = int(input("¿Deseas utilizar el sistema?\n1]Sí\n2]No"))
+        if programa == 1:
+            fecha = time.strftime("%d/%m/%Y")
+            hora = time.strftime("%H:%M:%S")
+            bandera = True
+            v_fecha.append(fecha)
+            v_hora.append(hora)
+
+            while bandera:
+                try:
+                    numero_empleado = int(input("Introduce el numero de empleado"))
+                    bandera = False
+                    v_numero_empleado.append(numero_empleado)
+
+                    if numero_empleado <= 0:
+                        bandera = True
+                        print("*Captura un numero de empleado valido*")
+                except ValueError:
+                    print("*Captura un numero de empleado valido*")
+
+            while compra_tdc > venta_tdc or compra_tdc == venta_tdc:
+                bandera = True
+                while bandera:
+                    try:
+                        compra_tdc = float(input("Introduce el tipo de cambio de Compra"))
+                        bandera = False
+                        v_tc_compra.append(compra_tdc)
+
+                        if compra_tdc <= 0:
+                            bandera = True
+                            print("*Captura un monto valido*")
+                    except ValueError:
+                        print("*Captura un tipo de cambio valido*")
+
+                bandera = True
+                while bandera:
+                    try:
+                        venta_tdc = float(input("Introduce el tipo de cambio de Venta"))
+                        bandera = False
+                        v_tc_venta.append(venta_tdc)
+
+                        if venta_tdc <= 0:
+                            bandera = True
+                            print("*Captura un monto valido*")
+                    except ValueError:
+                        print("*Captura un tipo de cambio valido*")
+                if compra_tdc > venta_tdc:
+                    print("*El valor de compra debe ser menor que el de venta*")
+                elif compra_tdc == venta_tdc:
+                    print("*El valor de venta debe ser mayor que el de compra*")
+
+            bandera = True
+            while bandera:
+                try:
+                    dolares_caja = float(input("Introduce la cantidad de Dolares en caja"))
+                    bandera = False
+                    v_efectivo_dolares.append(dolares_caja)
+
+                    if dolares_caja <= 0:
+                        bandera = True
+                        print("*Captura un monto valido*")
+                except ValueError:
+                    print("*Captura un monto valido*")
+
+            bandera = True
+            while bandera:
+                try:
+                    pesos_caja = float(input("Introduce la cantidad de Pesos en caja"))
+                    bandera = False
+                    v_efectivo_pesos.append(pesos_caja)
+                    v_numero_movimiento.append(movimiento)
+                    v_compra_venta.append("Inicio de operaciones")
+                    v_cantidad.append("Inicio de operaciones")
+                    movimiento += 1
+
+                    if pesos_caja <= 0:
+                        bandera = True
+                        print("*Captura un monto valido*")
+                except ValueError:
+                    print("*Captura un monto valido*")
+
+        elif programa == 2:
+            print("Vuelva pronto")
+            exit()
+        else:
+            print("*Introduce una opcion valida*")
+    except ValueError:
+        print("*Captura una opcion valida*")
+
+# Declaracion de variables_1
+pedir = float
+dar = float
+
+
+# Metodos
+def compra():
+    global fecha, compra_tdc, venta_tdc, dolares_caja, pesos_caja, pedir, dar, controlador
+    bandera = True
+    while bandera == True:
+        try:
+            pedir = float(input("Introduce la cantidad de dolares a comprar "))
+            bandera = False
+            if pedir < 0:
+                bandera = True
+                print("*Captura un monto valido*")
+        except ValueError:
+            print("*Introduce un monto valido*")
+    dar = pedir * compra_tdc
+    if dar <= pesos_caja:
+        print(f"Pide ${pedir} dolares al cliente y entrega ${dar} pesos.")
+        dolares_caja += pedir
+        pesos_caja -= dar
+
+        controlador = 2
+        agregarbitacora()
+
+    else:
+        print("No hay fondos suficientes")
+
+
+def venta():
+    global fecha, compra_tdc, venta_tdc, dolares_caja, pesos_caja, pedir, dar, controlador, ganancias
+    bandera = True
+    while bandera:
+        try:
+            dar = float(input("Introduce la cantidad de dolares a vender "))
+            bandera = False
+            if dar < 0:
+                bandera = True
+                print("*Captura un monto valido*")
+        except ValueError:
+            print("*Introduce un monto valido*")
+    pedir = dar * venta_tdc
+    if dar <= dolares_caja:
+        print(f"Pide ${pedir} pesos al cliente y entrega ${dar} dolares.")
+        dolares_caja -= dar
+        pesos_caja += pedir
+        ganancias = (venta_tdc - compra_tdc) * dar
+        controlador = 1
+        agregarbitacora()
+
+    else:
+        print("No hay fondos suficientes")
+
+
+def consultar_efectivo():
+    print(f"Efectivo en caja\nDolares: ${dolares_caja}\nPesos: ${pesos_caja}")
+
+
+def actualizar_tc():
+    global compra_tdc, venta_tdc
+    compra_tdc = 1
+    venta_tdc = 0
+    while compra_tdc > venta_tdc or compra_tdc == venta_tdc:
+        bandera = True
+        while bandera:
+            try:
+                compra_tdc = float(input("Introduce el tipo de cambio de Compra"))
+                bandera = False
+                if compra_tdc <= 0:
+                    bandera = True
+                    print("*Captura un monto valido*")
+            except ValueError:
+                print("*Captura un tipo de cambio valido*")
+
+        bandera = True
+        while bandera:
+            try:
+                venta_tdc = float(input("Introduce el tipo de cambio de Venta"))
+                bandera = False
+                if venta_tdc <= 0:
+                    bandera = True
+                    print("*Captura un monto valido*")
+            except ValueError:
+                print("*Captura un tipo de cambio valido*")
+        if compra_tdc > venta_tdc:
+            print("*El valor de compra debe ser menor que el de venta*")
+        elif compra_tdc == venta_tdc:
+            print("*El valor de venta debe ser mayor que el de compra*")
+
+
+def actualizar_no_emp():
+    bandera = True
+    while bandera:
+        try:
+            numero_empleado = int(input("Introduce el numero de empleado"))
+            bandera = False
+            if numero_empleado <= 0:
+                bandera = True
+                print("*Captura un numero de empleado valido*")
+        except ValueError:
+            print("*Captura un numero de empleado valido*")
+
+
+def bitacora():
+    global menu_bit, i, movimiento
+    menu_bit = True
+    while menu_bit == True:
+        bandera = True
+        while bandera:
+            try:
+                menu_bit = int(input("Menu Bitacora\n1]Inicio de operaciones\n2]Primer movimiento\n3]Ultimo movimiento\n4]Todos los movimientos\n5]Numero de transacciones\n6]Regresar"))
+                bandera = False
+            except ValueError:
+                print("*Captura una opcion valida*")
+        if menu_bit == 1:
+            i = 0
+            print(
+                f"Bitacora\nNumero de movimiento: {v_numero_movimiento[i]}\nNumero de empleado: {v_numero_empleado[i]}\nFecha: {v_fecha[i]}\nHora: {v_hora[i]}\nTipo de movimiento: {v_compra_venta[i]}\nTipo de cambio de compra: {v_tc_compra[i]}\nTipo de cambio de venta: {v_tc_venta[i]}\nCantidad del movimiento: {v_cantidad[i]}\nDolares en caja: {v_efectivo_dolares[i]}\nPesos en caja: {v_efectivo_pesos[i]}\n")
+            menu_bit = True
+        elif menu_bit == 2:
+            i = 1
+            print(
+                f"Bitacora\nNumero de movimiento: {v_numero_movimiento[i]}\nNumero de empleado: {v_numero_empleado[i]}\nFecha: {v_fecha[i]}\nHora: {v_hora[i]}\nTipo de movimiento: {v_compra_venta[i]}\nTipo de cambio de compra: {v_tc_compra[i]}\nTipo de cambio de venta: {v_tc_venta[i]}\nCantidad del movimiento: {v_cantidad[i]}\nDolares en caja: {v_efectivo_dolares[i]}\nPesos en caja: {v_efectivo_pesos[i]}\n")
+            menu_bit = True
+        elif menu_bit == 3:
+            i = (movimiento - 1)
+            print(
+                f"Bitacora\nNumero de movimiento: {v_numero_movimiento[i]}\nNumero de empleado: {v_numero_empleado[i]}\nFecha: {v_fecha[i]}\nHora: {v_hora[i]}\nTipo de movimiento: {v_compra_venta[i]}\nTipo de cambio de compra: {v_tc_compra[i]}\nTipo de cambio de venta: {v_tc_venta[i]}\nCantidad del movimiento: {v_cantidad[i]}\nDolares en caja: {v_efectivo_dolares[i]}\nPesos en caja: {v_efectivo_pesos[i]}\n")
+            menu_bit = True
+        elif menu_bit == 4:
+            for i in range(movimiento):
+                print(
+                    f"Bitacora\nNumero de movimiento: {v_numero_movimiento[i]}\nNumero de empleado: {v_numero_empleado[i]}\nFecha: {v_fecha[i]}\nHora: {v_hora[i]}\nTipo de movimiento: {v_compra_venta[i]}\nTipo de cambio de compra: {v_tc_compra[i]}\nTipo de cambio de venta: {v_tc_venta[i]}\nCantidad del movimiento: {v_cantidad[i]}\nDolares en caja: {v_efectivo_dolares[i]}\nPesos en caja: {v_efectivo_pesos[i]}\n")
+            menu_bit = True
+        elif menu_bit == 5:
+            print(f"Numero de transacciones sin inicio de operaciones: {movimiento}")
+            menu_bit = True
+        elif menu_bit == 6:
+            menu_bit = False
+            print("Regresando al menu más opciones")
+        else:
+            print("Introduce una opcion valida")
+
+
+def reporte_ventas():
+    global v_compra_venta, totales, compras, ventas, promedio, movimiento, fecha, ganancias, promedio, suma_ventas, v_cantidad
+    # Proceso
+    compras = 0
+    ventas = 0
+    totales = 0
+    suma_ventas = 0
+
+    compras = v_compra_venta.count("Compra")
+    ventas = v_compra_venta.count("Venta")
+    totales = compras + ventas
+
+    if ventas > 0:
+        p_ventas = (ventas * 100) / totales
+    else:
+        p_ventas = "No hubo movimientos"
+    if compras > 0:
+        p_compras = (compras * 100) / totales
+
+    else:
+        p_compras = "No hubo movimientos"
+
+    # Print
+    print(
+        f"Reporte de ventas\nFecha: {fecha}\nGanancias: ${ganancias} mx\nCantidad de movimientos sin inicio de operaciones: {movimiento - 1}\nPorcentaje de ventas: {round(p_ventas)}%\nPorcentaje de compras: {round(p_compras)}%\nEfectivo sugerido al inicio de operaciones de compra: Test \nEfectivo sugerido al inicio de operaciones de venta: Test\n")
+
+
+def agregarbitacora():
+    global movimiento, controlador, v_numero_movimiento, v_cantidad
+    v_numero_movimiento.append(movimiento)
+    v_numero_empleado.append(numero_empleado)
+    fecha = time.strftime("%d/%m/%Y")
+    hora = time.strftime("%H:%M:%S")
+    v_fecha.append(fecha)
+    v_hora.append(hora)
+
+    if controlador == 1:
+        v_compra_venta.append("Venta")
+    elif controlador == 2:
+        v_compra_venta.append("Compra")
+    v_tc_compra.append(compra_tdc)
+    v_tc_venta.append(venta_tdc)
+
+    if controlador == 1:
+        v_cantidad.append(dar)
+    elif controlador == 2:
+        v_cantidad.append(pedir)
+
+    v_efectivo_dolares.append(dolares_caja)
+    v_efectivo_pesos.append(pesos_caja)
+
+    movimiento += 1
+
+def agregar_efectivo_caja():
+    global dolares_caja,pesos_caja,bandera
+    bandera = True
+    while bandera == True:
+        try:
+            dolares_caja += int(input("Cantidad de dolares a agregar a caja"))
+            bandera = False
+        except ValueError:
+            print("Captura una cantidad valida")
+
+# Menu
+menu = int
+while menu != 6:
+    bandera = True
+    while bandera == True:
+        try:
+            menu = int(input(f"Express Exchange\n\nCompra: ${compra_tdc}   Venta: ${venta_tdc}\nNumero de empleado: {numero_empleado}\n\nMenu\n1]Compra\n2]Venta\n3]*OPCION EXTRA*\n4]Actualizar tipo de cambio\n5]Más opciones\n6]Salir"))
+            bandera = False
+        except ValueError:
+            print("Captura una opcion valida")
+    if menu == 1:
+        compra()
+    elif menu == 2:
+        venta()
+    elif menu == 3:
+        print("opcion")
+    elif menu == 4:
+        actualizar_tc()
+    elif menu == 5:
+        menu_2 = True
+        while menu_2 == True:
+            bandera = True
+            while bandera == True:
+                try:
+                    menu_2 = int(input(f"Express Exchange\n\nCompra: ${compra_tdc}   Venta: ${venta_tdc}\nNumero de empleado: {numero_empleado}\n\nMenu Más opciones\n1]Consultar efectivo en caja\n2]Bitacora de movimientos\n3]Reporte de ventas\n4]Actualizar numero de empleado\n5]Agregar efectivo a caja\n6]Regresar al menu anterior"))
+                    bandera = False
+                except ValueError:
+                    print("*Captura una opcion valida*")
+            if menu_2 == 1:
+                consultar_efectivo()
+                menu_2 = True
+            elif menu_2 == 2:
+                bitacora()
+                menu_2 = True
+            elif menu_2 == 3:
+                reporte_ventas()
+                menu_2 = True
+            elif menu_2 == 4:
+                actualizar_no_emp()
+            elif menu_2 == 5:
+                agregar_efectivo_caja()
+                menu_2 = True
+            elif menu_2 == 6:
+                menu_2 = False
+                print("Volviendo al menu principal")
+            else:
+                print("Introduce una opcion valida")
+
+    elif menu == 6:
+        print("Gracias por utilizar el sistema")
+    else:
+        print("Introduce una opcion valida")
