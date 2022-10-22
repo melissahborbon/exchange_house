@@ -416,7 +416,7 @@ def bitacora():
         while bandera:
             try:
                 menu_bit = simpledialog.askinteger("Bitacora",
-                                                   "\nExpress Exchange\n\nRFC: EJM951103H34\n\nCompra: ${compra_tdc}   Venta: ${venta_tdc}\nNumero de empleado: {numero_empleado}\n\nMenu Bitacora\n1]Inicio de operaciones\n2]Primer movimiento\n3]Ultimo movimiento\n4]Todos los movimientos\n5]Numero de transacciones\n6]Regresar\n")
+                                                   f"\nExpress Exchange\n\nRFC: EJM951103H34\n\nCompra: ${compra_tdc}   Venta: ${venta_tdc}\nNumero de empleado: {numero_empleado}\n\nMenu Bitacora\n1]Inicio de operaciones\n2]Primer movimiento\n3]Ultimo movimiento\n4]Todos los movimientos\n5]Numero de transacciones\n6]Regresar\n")
                 bandera = False
             except ValueError:
                 messagebox.showinfo("Bitacora", "\n*Captura una opcion valida*\n")
