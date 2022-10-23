@@ -510,7 +510,7 @@ def reporte_ventas():
     # Print
     messagebox.showinfo(
         "Reporte de ventas",
-        f"\nReporte de ventas\nFecha: {fecha}\nGanancias: ${ganancias} mx\nCantidad de movimientos sin inicio de operaciones: {movimiento - 1}\nPorcentaje de ventas: {round(p_ventas)}%\nPorcentaje de compras: {round(p_compras)}%\n")
+        f"\nReporte de ventas\nFecha: {fecha}\nGanancias: ${round(ganancias)} mx\nCantidad de movimientos sin inicio de operaciones: {movimiento - 1}\nPorcentaje de ventas: {round(p_ventas)}%\nPorcentaje de compras: {round(p_compras)}%\n")
 
 
 def retirarefectivo():
